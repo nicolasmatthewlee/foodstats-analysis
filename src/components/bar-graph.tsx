@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { select, scaleBand, scaleLinear, axisBottom, axisLeft } from "d3";
-import ResizeObserver from "resize-observer-polyfill";
+import { useResizeObserver } from "./graph-utilities";
 
 interface Props {
   title: string;
@@ -10,21 +10,6 @@ interface Props {
 }
 
 export const BarGraph = ({ title, data, units, labels }: Props) => {
-  const useResizeObserver = (ref: React.RefObject<SVGSVGElement>) => {
-    const [dimensions, setDimensions] = useState<DOMRectReadOnly | null>(null);
-    useEffect(() => {
-      const observeTarget = ref.current;
-      const resizeObserver = new ResizeObserver((entries) => {
-        setDimensions(entries[0].contentRect);
-      });
-      if (observeTarget) resizeObserver.observe(observeTarget);
-      return () => {
-        if (observeTarget) resizeObserver.unobserve(observeTarget); // cleanup
-      };
-    }, [ref]);
-    return dimensions;
-  };
-
   const svgRef = useRef<SVGSVGElement>(null);
   const dimensions = useResizeObserver(svgRef);
 
@@ -81,7 +66,7 @@ export const BarGraph = ({ title, data, units, labels }: Props) => {
   }, [data, units, labels, dimensions]);
 
   return (
-    <div className="pb-[30px] w-full space-y-[10px]">
+    <div className="w-full space-y-[10px]">
       <p className="text-[10px]">{title}</p>
       <svg
         ref={svgRef}
