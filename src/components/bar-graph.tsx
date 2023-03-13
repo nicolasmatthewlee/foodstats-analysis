@@ -1,64 +1,31 @@
 import { useEffect, useRef, useState } from "react";
 import { select, scaleBand, scaleLinear, axisBottom, axisLeft } from "d3";
-import { NutrientInterface } from "../interfaces/nutrient-interface";
 import ResizeObserver from "resize-observer-polyfill";
 
-export const GraphMacros = ({
-  nutrients,
-}: {
-  nutrients: NutrientInterface[];
-}) => {
-  const findNutrientByName = (name: string) => {
-    for (let i = 0; i < nutrients.length; i++) {
-      if (nutrients[i].nutrientName === name) return nutrients[i];
-    }
-    return { value: null };
-  };
+interface Props {
+  title: string;
+  data: number[];
+  units: string[];
+  labels: string[];
+}
 
+export const BarGraph = ({ title, data, units, labels }: Props) => {
   const useResizeObserver = (ref: React.RefObject<SVGSVGElement>) => {
     const [dimensions, setDimensions] = useState<DOMRectReadOnly | null>(null);
     useEffect(() => {
       const observeTarget = ref.current;
       const resizeObserver = new ResizeObserver((entries) => {
-        // set resized dimensions
         setDimensions(entries[0].contentRect);
       });
       if (observeTarget) resizeObserver.observe(observeTarget);
-
-      // cleanup
       return () => {
-        if (observeTarget) resizeObserver.unobserve(observeTarget);
+        if (observeTarget) resizeObserver.unobserve(observeTarget); // cleanup
       };
     }, [ref]);
     return dimensions;
   };
 
-  const labels: string[] = [];
-  const data: number[] = [];
-  const dataUnits: string[] = [];
-  for (let n of [
-    "Total lipid (fat)",
-    "Carbohydrate, by difference",
-    "Water",
-    "Protein",
-    "Ash",
-  ]) {
-    const nutrient = findNutrientByName(n);
-    if (nutrient.value !== null) {
-      const label =
-        nutrient.nutrientName === "Carbohydrate, by difference"
-          ? "Carbohydrate"
-          : nutrient.nutrientName === "Total lipid (fat)"
-          ? "Fat"
-          : nutrient.nutrientName;
-      labels.push(label);
-      data.push(nutrient.value);
-      dataUnits.push(nutrient.unitName);
-    }
-  }
-
   const svgRef = useRef<SVGSVGElement>(null);
-
   const dimensions = useResizeObserver(svgRef);
 
   useEffect(() => {
@@ -104,19 +71,22 @@ export const GraphMacros = ({
           .data([value])
           .join("text")
           .attr("class", "data-label")
-          .text((v: number, i: number) => `${v} ${dataUnits[i]}`)
+          .text((v: number, i: number) => `${v} ${units[i]}`)
           .attr("x", event.target.x.baseVal.value + xScale.bandwidth() / 2)
           .attr("text-anchor", "middle")
           .attr("y", yAxisScale(value) - 5)
           .style("font-size", "10px");
       })
       .on("mouseleave", () => svg.selectAll(".data-label").remove());
-  }, [data, labels, dimensions]);
+  }, [data, units, labels, dimensions]);
 
   return (
-    <div className="pb-[40px] w-full space-y-[10px]">
-      <p className="text-[10px]">Macronutrients</p>
-      <svg ref={svgRef} className="w-full h-full overflow-visible pl-[20px] ">
+    <div className="pb-[30px] w-full space-y-[10px]">
+      <p className="text-[10px]">{title}</p>
+      <svg
+        ref={svgRef}
+        className="w-full h-full overflow-visible pl-[20px] pb-[45px]"
+      >
         <g className="x-axis" />
         <g className="y-axis" />
       </svg>

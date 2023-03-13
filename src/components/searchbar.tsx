@@ -26,15 +26,18 @@ export const SearchBar = () => {
   };
 
   return (
-    <div>
+    <div className="p-[30px]">
       {selection ? <Graphs data={selection} /> : null}
       <div className="flex">
         <input
           type="text"
-          className="border flex-1"
+          className="border flex-1 py-[3px] px-[5px]"
           onChange={(e) => setSearchValue(e.target.value)}
         />
-        <button className="border" onClick={searchDatabase}>
+        <button
+          className="border px-[5px] hover:bg-gray-100"
+          onClick={searchDatabase}
+        >
           submit
         </button>
       </div>
