@@ -1,6 +1,6 @@
 import { FoodInterface } from "../interfaces/food-interface";
 import { BarGraph } from "./bar-graph";
-import { GraphMacrosStacked } from "./graph-macros-stacked";
+import { BarGraphStacked } from "./bar-graph-stacked";
 
 interface Props {
   data: FoodInterface;
@@ -56,25 +56,18 @@ export const Graphs = ({
       <p className="truncate">
         {description} | {fdcId} | {dataType} | {publishedDate}
       </p>
-      <div className="flex space-x-[30px]">
-        <BarGraph
-          title="Macronutrients"
-          data={macrosData}
-          units={macrosUnits}
-          labels={macrosLabels}
-        />
-        {/* <BarGraph /> */}
-      </div>
-      <div className="flex space-x-[30px]">
-        <GraphMacrosStacked
-          data={[
-            { name: "alpha", value: 1 },
-            { name: "bravo", value: 2 },
-            { name: "charlie", value: 3 },
-            { name: "delta", value: 4 },
-          ]}
-        />
-      </div>
+      <BarGraph
+        title="Macronutrients"
+        data={macrosData}
+        units={macrosUnits}
+        labels={macrosLabels}
+      />
+      <BarGraphStacked
+        title="Macronutrients"
+        data={macrosData}
+        units={macrosUnits}
+        labels={macrosLabels}
+      />
     </div>
   );
 };

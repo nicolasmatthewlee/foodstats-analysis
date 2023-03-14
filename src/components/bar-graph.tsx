@@ -15,7 +15,6 @@ export const BarGraph = ({ title, data, units, labels }: Props) => {
 
   useEffect(() => {
     if (!dimensions) return;
-
     const svg = select(svgRef.current);
 
     const xScale = scaleBand()
@@ -43,7 +42,6 @@ export const BarGraph = ({ title, data, units, labels }: Props) => {
       .selectAll(".bar")
       .data(data)
       .join("rect")
-
       .attr("class", "bar")
       .style("transform", "scale(1,-1)")
       .attr("x", (_: any, i: number) => xScale(i))
