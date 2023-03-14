@@ -25,38 +25,49 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
     svg
       .selectAll(".bar")
       .data(data)
-      .join("g")
-      .attr("data-index", (v: number, i: number) => i)
-      .attr(
-        "transform",
-        (_: any, i: number) => `translate(${xScale(cumSum[i])},0)`
-      )
-      .on("mouseenter", function (event: any, value: number) {
-        select(event.target)
-          .append("text")
-          .attr("class", "data-label")
-          .text((v: number) => `${v} ${units[0]}`)
-          .attr("x", (v: number) => xScale(v / 2))
-          .attr("y", dimensions.height / 2 + 5)
-          .attr("text-anchor", "middle")
-          .style("font-size", "10px")
-          .attr(
-            "fill",
-            (_: any, i: number) =>
-              `hsl(0,0%,${
-                event.target.dataset.index * (100 / data.length) > 50 ? 0 : 100
-              }%)`
-          );
-      })
-      .on("mouseleave", () => svg.selectAll(".data-label").remove())
-      .append("rect")
+      .join("rect")
       .attr("class", "bar")
+      .attr("data-index", (_: number, i: number) => i)
+      .attr("x", (_: number, i: number) => xScale(cumSum[i]))
       .attr("width", (v: number) => xScale(v))
       .attr("height", dimensions.height)
       .attr(
         "fill",
         (_: any, i: number) => `hsl(0,0%,${i * (100 / data.length)}%)`
-      );
+      )
+      .on("mouseenter", function (event: any, value: number) {
+        svg
+          .selectAll("data-label")
+          .data([value])
+          .join("text")
+          .attr("class", "data-label")
+          .text(
+            (v: number) =>
+              `${labels[event.target.dataset.index]} ${v} ${
+                units[event.target.dataset.index]
+              }`
+          )
+          .style("font-size", "10px")
+          .attr("y", -2)
+          .attr("x", (v: number, i: number, nodes: any) => {
+            const textWidth = nodes[0].getComputedTextLength();
+            const remainingSpace = xScale(
+              100 - cumSum[event.target.dataset.index]
+            );
+            return xScale(
+              (textWidth < remainingSpace ? 0 : v) +
+                cumSum[event.target.dataset.index]
+            );
+          })
+          .attr("text-anchor", (v: number, i: number, nodes: any) => {
+            const textWidth = nodes[0].getComputedTextLength();
+            const remainingSpace = xScale(
+              100 - cumSum[event.target.dataset.index]
+            );
+            return textWidth < remainingSpace ? "start" : "end";
+          });
+      })
+      .on("mouseleave", () => svg.selectAll(".data-label").remove());
 
     return () => {
       svg.selectAll("rect").remove();
