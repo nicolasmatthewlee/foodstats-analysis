@@ -42,11 +42,13 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
           const offset =
             i > 0
               ? svg
-                  .selectAll(".legend-item>text")
-                  ._groups[0][i - 1].getComputedTextLength() +
-                svg.selectAll(".legend-item>text")._groups[0][i - 1].x
-                  .baseVal[0].value +
-                svg.selectAll(".legend-item")._groups[0][i - 1].transform
+                  .select(".legend-item:nth-last-child(2)>text")
+                  .node()
+                  .getComputedTextLength() +
+                Number(
+                  svg.select(".legend-item:nth-last-child(2)>text").attr("x")
+                ) +
+                svg.select(".legend-item:nth-last-child(2)").node().transform
                   .baseVal[0].matrix.e
               : 0;
 
@@ -63,7 +65,7 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
         .append("text")
         .text(labels[i])
         .attr("font-size", "10px")
-        .attr("x", rect._groups[0][0].width.baseVal.value + itemSpacingInner)
+        .attr("x", +rect.attr("width") + itemSpacingInner) // + converts string to number
         .attr("y", 9);
     }
 
