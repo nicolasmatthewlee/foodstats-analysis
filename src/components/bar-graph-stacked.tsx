@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useResizeObserver, truncateSVGText } from "./graph-utilities";
+import { useResizeObserver } from "./graph-utilities";
 import * as d3 from "d3";
 
 interface Props {
@@ -30,7 +30,9 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
     // create legend
     // clear legend
     svg.selectAll(".legend-item").remove();
-    const padding = 5;
+    const itemSpacing = 20;
+    const itemSpacingInner = 3;
+    const leftOffset = 5;
     for (let i = 0; i < labels.length; i++) {
       const legendItem = svg
         .append("g")
@@ -42,11 +44,13 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
               ? svg
                   .selectAll(".legend-item>text")
                   ._groups[0][i - 1].getComputedTextLength() +
+                svg.selectAll(".legend-item>text")._groups[0][i - 1].x
+                  .baseVal[0].value +
                 svg.selectAll(".legend-item")._groups[0][i - 1].transform
                   .baseVal[0].matrix.e
               : 0;
 
-          return `translate(${offset + padding * (i + 1)},${
+          return `translate(${offset + (i > 0 ? itemSpacing : leftOffset)},${
             dimensions.height + 5
           })`;
         });
@@ -59,7 +63,7 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
         .append("text")
         .text(labels[i])
         .attr("font-size", "10px")
-        .attr("x", rect._groups[0][0].width.baseVal.value)
+        .attr("x", rect._groups[0][0].width.baseVal.value + itemSpacingInner)
         .attr("y", 9);
     }
 
@@ -79,7 +83,12 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
           .data([value])
           .join("text")
           .attr("class", "data-label")
-          .text((v: number) => `${v} ${units[event.target.dataset.index]}`)
+          .text(
+            (v: number) =>
+              `${labels[event.target.dataset.index]} ${v} ${
+                units[event.target.dataset.index]
+              }`
+          )
           .style("font-size", "10px")
           .attr("y", -2)
           .attr("x", (v: number, i: number, nodes: any) => {
@@ -108,7 +117,7 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
   });
 
   return (
-    <div className="w-full space-y-[10px]">
+    <div className="w-full space-y-[10px] pb-[15px]">
       <p className="text-[10px]">{title}</p>
       <svg ref={svgRef} className="w-full h-full overflow-visible border">
         <g className="x-axis" />
