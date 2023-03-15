@@ -52,22 +52,27 @@ export const Graphs = ({
   let [macrosData, macrosUnits, macrosLabels] = getDataUnitsLabels(macros);
 
   return (
-    <div className="space-y-[30px]">
+    <div className="space-y-[30px] pb-[30px]">
       <p className="truncate">
         {description} | {fdcId} | {dataType} | {publishedDate}
       </p>
-      <BarGraph
-        title="Macronutrients"
-        data={macrosData}
-        units={macrosUnits}
-        labels={macrosLabels}
-      />
-      <BarGraphStacked
-        title="Macronutrients"
-        data={macrosData}
-        units={macrosUnits}
-        labels={macrosLabels}
-      />
+      <div
+        className="grid grid-cols-1 space-y-[30px]
+      md:grid-cols-2 md:space-x-[30px] md:space-y-[0px]"
+      >
+        <BarGraph
+          title="Macronutrients"
+          data={macrosData}
+          units={macrosUnits}
+          labels={macrosLabels}
+        />
+        <BarGraphStacked
+          title="Macronutrients"
+          data={macrosData}
+          units={macrosUnits}
+          labels={macrosLabels}
+        />
+      </div>
     </div>
   );
 };

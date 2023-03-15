@@ -57,7 +57,7 @@ export const BarGraph = ({ title, data, units, labels }: Props) => {
           .text((v: number, i: number) => `${v} ${units[i]}`)
           .attr("x", event.target.x.baseVal.value + xScale.bandwidth() / 2)
           .attr("text-anchor", "middle")
-          .attr("y", yAxisScale(value) - 5)
+          .attr("y", yAxisScale(value) - 2)
           .style("font-size", "10px");
       })
       .on("mouseleave", () => svg.selectAll(".data-label").remove());
@@ -65,10 +65,10 @@ export const BarGraph = ({ title, data, units, labels }: Props) => {
 
   return (
     <div className="w-full space-y-[10px]">
-      <p className="text-[10px]">{title}</p>
+      <p className="text-[12px]">{title}</p>
       <svg
         ref={svgRef}
-        className="w-full h-full overflow-visible pl-[20px] pb-[45px]"
+        className="w-full h-full overflow-visible pl-[20px] pb-[42px] border border-white"
       >
         <g className="x-axis" />
         <g className="y-axis" />
