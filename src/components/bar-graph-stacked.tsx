@@ -117,12 +117,14 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
   });
 
   return (
-    <div className="max-w-full h-full space-y-[10px] flex flex-col pb-[15px]">
+    <div className="max-w-full space-y-[10px] flex flex-col">
       <p className="text-[12px]">{title}</p>
-      <svg ref={svgRef} className="w-full h-full overflow-visible border">
-        <g className="x-axis" />
-        <g className="y-axis" />
-      </svg>
+      <div className="pb-[15px]">
+        <svg ref={svgRef} className="w-full overflow-visible border">
+          <g className="x-axis" />
+          <g className="y-axis" />
+        </svg>
+      </div>
     </div>
   );
 };

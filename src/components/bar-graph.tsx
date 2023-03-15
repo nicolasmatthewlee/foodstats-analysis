@@ -64,11 +64,11 @@ export const BarGraph = ({ title, data, units, labels }: Props) => {
   }, [data, units, labels, dimensions]);
 
   return (
-    <div className="w-full space-y-[10px]">
+    <div className="w-full h-full space-y-[10px] flex flex-col">
       <p className="text-[12px]">{title}</p>
       <svg
         ref={svgRef}
-        className="w-full h-full overflow-visible pl-[20px] pb-[42px] border border-white"
+        className="w-full h-full overflow-visible pl-[20px] pb-[18px] border-t border-white"
       >
         <g className="x-axis" />
         <g className="y-axis" />
