@@ -153,18 +153,22 @@ export const Graphs = ({
           units={mineralsUnits}
           labels={mineralsLabels}
         />
-        <BarGraph
-          title="Vitamin E"
-          data={vitaminEData}
-          units={vitaminEUnits}
-          labels={vitaminELabels}
-        />
-        <BarGraph
-          title="Other"
-          data={otherData}
-          units={otherUnits}
-          labels={otherLabels}
-        />
+        {vitaminEData.length > 0 ? (
+          <BarGraph
+            title="Vitamin E"
+            data={vitaminEData}
+            units={vitaminEUnits}
+            labels={vitaminELabels}
+          />
+        ) : null}
+        {otherData.length > 0 ? (
+          <BarGraph
+            title="Other"
+            data={otherData}
+            units={otherUnits}
+            labels={otherLabels}
+          />
+        ) : null}
       </div>
     </div>
   );
