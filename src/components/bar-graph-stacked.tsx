@@ -34,12 +34,13 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
     const itemSpacingInner = 3;
     const leftOffset = 5;
     for (let i = 0; i < labels.length; i++) {
+      let offset: number = 0;
       const legendItem = svg
         .append("g")
         .attr("class", "legend-item")
         .attr("transform", () => {
           // get the previous legendItem's placement
-          const offset =
+          offset =
             i > 0
               ? svg
                   .select(".legend-item:nth-last-child(2)>text")
@@ -53,7 +54,10 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
               : 0;
 
           return `translate(${offset + (i > 0 ? itemSpacing : leftOffset)},${
-            dimensions.height + 5
+            i > 0
+              ? svg.select(".legend-item:nth-last-child(2)").node().transform
+                  .baseVal[0].matrix.f
+              : dimensions.height + 5
           })`;
         });
       const rect = legendItem
@@ -61,12 +65,29 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
         .attr("width", 10)
         .attr("height", 10)
         .attr("fill", colors[i]);
-      legendItem
+      const text = legendItem
         .append("text")
         .text(labels[i])
         .attr("font-size", "10px")
         .attr("x", +rect.attr("width") + itemSpacingInner) // + converts string to number
         .attr("y", 9);
+
+      if (
+        offset +
+          +text.node().getComputedTextLength() +
+          +rect.attr("width") +
+          itemSpacing >
+        dimensions.width
+      )
+        legendItem.attr(
+          "transform",
+          `translate(${leftOffset},${
+            i > 0
+              ? svg.select(".legend-item:nth-last-child(2)").node().transform
+                  .baseVal[0].matrix.f + 15
+              : dimensions.height + 5
+          })`
+        );
     }
 
     svg
