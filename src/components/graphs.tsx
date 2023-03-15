@@ -126,8 +126,8 @@ export const Graphs = ({
         {description} | {fdcId} | {dataType} | {publishedDate}
       </p>
       <div
-        className="grid space-y-[30px]
-      md:grid-cols-2 md:space-x-[30px] md:space-y-0"
+        className="grid gap-y-[30px] gap-x-[30px]
+      md:grid-cols-2"
       >
         <BarGraph
           title="Macronutrients"

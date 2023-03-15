@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { select, scaleBand, scaleLinear, axisBottom, axisLeft } from "d3";
 import { useResizeObserver } from "./graph-utilities";
 
@@ -12,6 +12,7 @@ interface Props {
 export const BarGraph = ({ title, data, units, labels }: Props) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const dimensions = useResizeObserver(svgRef);
+  const [yAxisPadding, setYAxisPadding] = useState<number>(0);
 
   useEffect(() => {
     if (!dimensions) return;
@@ -37,6 +38,16 @@ export const BarGraph = ({ title, data, units, labels }: Props) => {
 
     const yAxis = axisLeft(yAxisScale).tickSizeOuter(0);
     svg.select(".y-axis").call(yAxis);
+
+    // padding = width of largest y-tick text + its horizontal offset
+    setYAxisPadding(
+      svg
+        .selectAll(".tick:last-of-type>text")
+        ._groups[0][1].getComputedTextLength() +
+        Math.abs(
+          svg.select(".y-axis").select(".tick:last-of-type>text").attr("x")
+        )
+    );
 
     svg
       .selectAll(".bar")
@@ -64,11 +75,12 @@ export const BarGraph = ({ title, data, units, labels }: Props) => {
   }, [data, units, labels, dimensions]);
 
   return (
-    <div className="w-full h-full space-y-[10px] flex flex-col">
+    <div className="max-w-full h-full space-y-[10px] flex flex-col">
       <p className="text-[12px]">{title}</p>
       <svg
         ref={svgRef}
-        className="w-full h-full overflow-visible pl-[20px] pb-[18px] border-t border-white"
+        className="w-full h-full overflow-visible pb-[18px] border-t border-white"
+        style={{ paddingLeft: yAxisPadding }}
       >
         <g className="x-axis" />
         <g className="y-axis" />
