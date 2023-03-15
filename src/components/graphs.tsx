@@ -46,10 +46,79 @@ export const Graphs = ({
     "Carbohydrate, by difference",
     "Water",
     "Protein",
+    "Alcohol, ethyl",
     "Ash",
+  ];
+  const minerals = [
+    "Calcium, Ca",
+    "Iron, Fe",
+    "Magnesium, Mg",
+    "Phosphorus, P",
+    "Potassium, K",
+    "Sodium, Na",
+    "Zinc, Zn",
+    "Copper, Cu",
+    "Manganese, Mn",
+    "Selenium, Se",
+  ];
+
+  const vitamins = [
+    "Vitamin C, total ascorbic acid",
+    "Thiamin",
+    "Riboflavin",
+    "Niacin",
+    "Pantothenic acid",
+    "Vitamin B-6",
+    "Folate, total",
+    "Folic acid",
+    "Folate, food",
+    "Folate, DFE",
+    "Vitamin B-12",
+    "Vitamin B-12, added",
+    "Vitamin A, RAE",
+    "Retinol",
+
+    "Vitamin A, IU",
+    "Vitamin E (alpha-tocopherol)",
+    "Vitamin E, added",
+    "Vitamin D (D2 + D3), International Units",
+    "Vitamin D (D2 + D3)",
+    "Vitamin D3 (cholecalciferol)",
+    "Vitamin K (phylloquinone)",
+    "Vitamin K (Dihydrophylloquinone)",
+  ];
+
+  const vitaminE = [
+    "Tocopherol, beta",
+    "Tocopherol, gamma",
+    "Tocopherol, delta",
+    "Tocotrienol, alpha",
+    "Tocotrienol, beta",
+    "Tocotrienol, gamma",
+    "Tocotrienol, delta",
+  ];
+
+  const otherNutrients = [
+    "Choline, total",
+    "Betaine",
+    "Carotene, beta",
+    "Carotene, alpha",
+    "Cryptoxanthin, beta",
+    "Lycopene",
+    "Lutein + zeaxanthin",
   ];
 
   let [macrosData, macrosUnits, macrosLabels] = getDataUnitsLabels(macros);
+
+  let [mineralsData, mineralsUnits, mineralsLabels] =
+    getDataUnitsLabels(minerals);
+
+  let [vitaminsData, vitaminsUnits, vitaminsLabels] =
+    getDataUnitsLabels(vitamins);
+
+  let [vitaminEData, vitaminEUnits, vitaminELabels] =
+    getDataUnitsLabels(vitaminE);
+  let [otherData, otherUnits, otherLabels] = getDataUnitsLabels(otherNutrients);
 
   return (
     <div className="space-y-[30px] pb-[30px]">
@@ -71,6 +140,30 @@ export const Graphs = ({
           data={macrosData}
           units={macrosUnits}
           labels={macrosLabels}
+        />
+        <BarGraph
+          title="Vitamins"
+          data={vitaminsData}
+          units={vitaminsUnits}
+          labels={vitaminsLabels}
+        />
+        <BarGraph
+          title="Minerals"
+          data={mineralsData}
+          units={mineralsUnits}
+          labels={mineralsLabels}
+        />
+        <BarGraph
+          title="Vitamin E"
+          data={vitaminEData}
+          units={vitaminEUnits}
+          labels={vitaminELabels}
+        />
+        <BarGraph
+          title="Other"
+          data={otherData}
+          units={otherUnits}
+          labels={otherLabels}
         />
       </div>
     </div>
