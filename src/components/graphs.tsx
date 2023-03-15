@@ -1,6 +1,7 @@
 import { FoodInterface } from "../interfaces/food-interface";
 import { BarGraph } from "./bar-graph";
 import { BarGraphStacked } from "./bar-graph-stacked";
+import { BarGraphHorizontal } from "./bar-graph-horizontal";
 
 interface Props {
   data: FoodInterface;
@@ -126,7 +127,7 @@ export const Graphs = ({
         {description} | {fdcId} | {dataType} | {publishedDate}
       </p>
       <div
-        className="grid gap-y-[30px] gap-x-[30px]
+        className="grid gap-y-[30px] gap-x-[60px]
       md:grid-cols-2"
       >
         <BarGraph
@@ -141,20 +142,20 @@ export const Graphs = ({
           units={macrosUnits}
           labels={macrosLabels}
         />
-        <BarGraph
+        <BarGraphHorizontal
           title="Vitamins"
           data={vitaminsData}
           units={vitaminsUnits}
           labels={vitaminsLabels}
         />
-        <BarGraph
+        <BarGraphHorizontal
           title="Minerals"
           data={mineralsData}
           units={mineralsUnits}
           labels={mineralsLabels}
         />
         {vitaminEData.length > 0 ? (
-          <BarGraph
+          <BarGraphHorizontal
             title="Vitamin E"
             data={vitaminEData}
             units={vitaminEUnits}
@@ -162,7 +163,7 @@ export const Graphs = ({
           />
         ) : null}
         {otherData.length > 0 ? (
-          <BarGraph
+          <BarGraphHorizontal
             title="Other"
             data={otherData}
             units={otherUnits}

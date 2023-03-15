@@ -20,12 +20,12 @@ export const BarGraph = ({ title, data, units, labels }: Props) => {
 
     const xScale = scaleBand()
       .domain(data.map((_, i) => i))
-      .range([0, dimensions?.width])
+      .range([0, dimensions.width])
       .padding(0.2);
 
     const yScale = scaleLinear()
       .domain([0, Math.max(...data)])
-      .range([0, dimensions?.height]);
+      .range([0, dimensions.height]);
     const yAxisScale = scaleLinear()
       .domain([0, Math.max(...data)])
       .range([dimensions?.height, 0]);
