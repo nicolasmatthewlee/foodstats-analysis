@@ -23,7 +23,6 @@ const truncateSVGText = (element: SVGTextElement, maxWidth: number) => {
   if (maxWidth < 0) throw Error("maxWidth cannot be less than 0");
 
   element.textContent += "...";
-  console.log("hi");
   while (element.getComputedTextLength() > maxWidth) {
     element.textContent = element.textContent
       ? element.textContent.length <= 3

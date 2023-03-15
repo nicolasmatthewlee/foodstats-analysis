@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { select, scaleBand, scaleLinear, axisBottom, axisLeft } from "d3";
-import { useResizeObserver } from "./graph-utilities";
+import { useResizeObserver, truncateSVGText } from "./graph-utilities";
 
 interface Props {
   title: string;
@@ -35,6 +35,12 @@ export const BarGraph = ({ title, data, units, labels }: Props) => {
       .select(".x-axis")
       .style("transform", `translateY(${dimensions?.height}px)`)
       .call(xAxis);
+
+    svg
+      .selectAll(".x-axis>.tick>text")
+      .each((v: number, i: number, nodes: any) =>
+        truncateSVGText(nodes[i], xScale.bandwidth())
+      );
 
     const yAxis = axisLeft(yAxisScale).tickSizeOuter(0);
     svg.select(".y-axis").call(yAxis);
