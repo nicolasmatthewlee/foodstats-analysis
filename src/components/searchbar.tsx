@@ -28,7 +28,7 @@ export const SearchBar = () => {
   return (
     <div className="p-[30px]">
       {selection ? <Graphs data={selection} /> : null}
-      <div className="flex">
+      <div className="flex mt-[30px]">
         <input
           type="text"
           className="border flex-1 py-[3px] px-[5px]"

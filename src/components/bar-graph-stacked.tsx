@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { useResizeObserver } from "./graph-utilities";
-import { select, cumsum, scaleLinear } from "d3";
+import { useResizeObserver, truncateSVGText } from "./graph-utilities";
+import * as d3 from "d3";
 
 interface Props {
   title: string;
@@ -15,12 +15,53 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
 
   useEffect(() => {
     if (!dimensions) return;
-    const svg = select(svgRef.current);
+    const svg = d3.select(svgRef.current);
 
-    const cumSum = [0].concat(...cumsum(data));
+    const cumSum = [0].concat(...d3.cumsum(data));
 
     // domain is [0,100] because max position is 100 (for a 100g sample)
-    const xScale = scaleLinear().domain([0, 100]).range([0, dimensions.width]);
+    const xScale = d3
+      .scaleLinear()
+      .domain([0, 100])
+      .range([0, dimensions.width]);
+
+    const colors = data.map((_d, i) => `hsl(0,0%,${i * (100 / data.length)}%)`);
+
+    // create legend
+    // clear legend
+    svg.selectAll(".legend-item").remove();
+    const padding = 5;
+    for (let i = 0; i < labels.length; i++) {
+      const legendItem = svg
+        .append("g")
+        .attr("class", "legend-item")
+        .attr("transform", () => {
+          // get the previous legendItem's placement
+          const offset =
+            i > 0
+              ? svg
+                  .selectAll(".legend-item>text")
+                  ._groups[0][i - 1].getComputedTextLength() +
+                svg.selectAll(".legend-item")._groups[0][i - 1].transform
+                  .baseVal[0].matrix.e
+              : 0;
+
+          return `translate(${offset + padding * (i + 1)},${
+            dimensions.height + 5
+          })`;
+        });
+      const rect = legendItem
+        .append("rect")
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", colors[i]);
+      legendItem
+        .append("text")
+        .text(labels[i])
+        .attr("font-size", "10px")
+        .attr("x", rect._groups[0][0].width.baseVal.value)
+        .attr("y", 9);
+    }
 
     svg
       .selectAll(".bar")
@@ -31,22 +72,14 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
       .attr("x", (_: number, i: number) => xScale(cumSum[i]))
       .attr("width", (v: number) => xScale(v))
       .attr("height", dimensions.height)
-      .attr(
-        "fill",
-        (_: any, i: number) => `hsl(0,0%,${i * (100 / data.length)}%)`
-      )
+      .attr("fill", (_: any, i: number) => colors[i])
       .on("mouseenter", function (event: any, value: number) {
         svg
           .selectAll("data-label")
           .data([value])
           .join("text")
           .attr("class", "data-label")
-          .text(
-            (v: number) =>
-              `${labels[event.target.dataset.index]} ${v} ${
-                units[event.target.dataset.index]
-              }`
-          )
+          .text((v: number) => `${v} ${units[event.target.dataset.index]}`)
           .style("font-size", "10px")
           .attr("y", -2)
           .attr("x", (v: number, i: number, nodes: any) => {
