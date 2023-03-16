@@ -111,15 +111,8 @@ export const Graphs = ({
 
   let [macrosData, macrosUnits, macrosLabels] = getDataUnitsLabels(macros);
 
-  let [mineralsData, mineralsUnits, mineralsLabels] =
-    getDataUnitsLabels(minerals);
-
-  let [vitaminsData, vitaminsUnits, vitaminsLabels] =
-    getDataUnitsLabels(vitamins);
-
-  let [vitaminEData, vitaminEUnits, vitaminELabels] =
-    getDataUnitsLabels(vitaminE);
-  let [otherData, otherUnits, otherLabels] = getDataUnitsLabels(otherNutrients);
+  let [vitaminsMineralsData, vitaminsMineralsUnits, vitaminsMineralsLabels] =
+    getDataUnitsLabels(minerals.concat(...vitamins));
 
   return (
     <div className="space-y-[30px] pb-[30px]">
@@ -139,33 +132,11 @@ export const Graphs = ({
       md:grid-cols-2"
       >
         <BarGraphHorizontal
-          title="Vitamins"
-          data={vitaminsData}
-          units={vitaminsUnits}
-          labels={vitaminsLabels}
+          title="Vitamins & Minerals"
+          data={vitaminsMineralsData}
+          units={vitaminsMineralsUnits}
+          labels={vitaminsMineralsLabels}
         />
-        <BarGraphHorizontal
-          title="Minerals"
-          data={mineralsData}
-          units={mineralsUnits}
-          labels={mineralsLabels}
-        />
-        {vitaminEData.length > 0 ? (
-          <BarGraphHorizontal
-            title="Vitamin E"
-            data={vitaminEData}
-            units={vitaminEUnits}
-            labels={vitaminELabels}
-          />
-        ) : null}
-        {otherData.length > 0 ? (
-          <BarGraphHorizontal
-            title="Other"
-            data={otherData}
-            units={otherUnits}
-            labels={otherLabels}
-          />
-        ) : null}
       </div>
     </div>
   );
