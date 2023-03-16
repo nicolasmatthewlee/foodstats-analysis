@@ -134,20 +134,25 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
       })
       .on("mouseleave", () => svg.selectAll(".data-label").remove());
 
+    svg
+      .select(".border")
+      .attr("width", dimensions.width)
+      .attr("height", dimensions.height);
+
     return () => {
-      svg.selectAll("rect").remove();
+      svg.selectAll(".legend-item").remove();
     };
   });
 
   return (
-    <div className="max-w-full space-y-[10px] flex flex-col">
+    <div className="max-w-full h-full space-y-[10px] flex flex-col">
       <p className="text-[12px]">{title}</p>
-      <div className="pb-[15px]">
-        <svg ref={svgRef} className="w-full overflow-visible border">
-          <g className="x-axis" />
-          <g className="y-axis" />
-        </svg>
-      </div>
+
+      <svg ref={svgRef} className="w-full h-full overflow-visible pb-[15px]">
+        <rect className="border fill-none stroke-gray-300" />
+        <g className="x-axis" />
+        <g className="y-axis" />
+      </svg>
     </div>
   );
 };

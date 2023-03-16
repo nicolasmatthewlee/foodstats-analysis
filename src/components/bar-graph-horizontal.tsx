@@ -1,13 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useResizeObserver } from "./graph-utilities";
-import {
-  select,
-  scaleBand,
-  scaleLinear,
-  axisBottom,
-  axisLeft,
-  format,
-} from "d3";
+import { select, scaleBand, scaleLinear, axisBottom, axisLeft } from "d3";
 
 interface Props {
   title: string;

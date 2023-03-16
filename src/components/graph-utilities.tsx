@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ResizeObserver from "resize-observer-polyfill";
-import * as d3 from "d3";
 
 const useResizeObserver = (ref: React.RefObject<SVGSVGElement>) => {
   const [dimensions, setDimensions] = useState<DOMRectReadOnly | null>(null);

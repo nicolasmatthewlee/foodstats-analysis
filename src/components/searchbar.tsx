@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Graphs } from "./graphs";
+import { Graphs } from "./visualizations";
 import { FoodInterface } from "../interfaces/food-interface";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

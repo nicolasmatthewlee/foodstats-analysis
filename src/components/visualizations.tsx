@@ -126,17 +126,19 @@ export const Graphs = ({
       <p className="truncate">
         {description} | {fdcId} | {dataType} | {publishedDate}
       </p>
-      <div
-        className="grid gap-y-[30px] gap-x-[60px]
-      md:grid-cols-2"
-      >
-        <BarGraph
+      <div className="h-[100px]">
+        <BarGraphStacked
           title="Macronutrients"
           data={macrosData}
           units={macrosUnits}
           labels={macrosLabels}
         />
-        <BarGraphStacked
+      </div>
+      <div
+        className="grid gap-y-[30px] gap-x-[60px]
+      md:grid-cols-2"
+      >
+        <BarGraph
           title="Macronutrients"
           data={macrosData}
           units={macrosUnits}
