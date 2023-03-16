@@ -116,9 +116,13 @@ export const Graphs = ({
 
   return (
     <div className="space-y-[30px] pb-[30px]">
-      <p className="truncate">
-        {description} | {fdcId} | {dataType} | {publishedDate}
-      </p>
+      <div className="flex flex-col">
+        <div className="flex">
+          <h1 className="truncate flex-1">{description}</h1>
+          <p>#{fdcId}</p>
+        </div>
+        <p className="text-sm text-gray-500">{dataType}</p>
+      </div>
       <div className="h-[100px]">
         <BarGraphStacked
           title="Macronutrients"
