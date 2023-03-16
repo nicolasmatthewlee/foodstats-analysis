@@ -64,7 +64,6 @@ export const BarGraph = ({ title, data, units, labels }: Props) => {
       .attr("x", (_: any, i: number) => xScale(i))
       .attr("y", dimensions ? -dimensions.height : 0)
       .attr("width", xScale.bandwidth())
-      .attr("height", (v: number) => yScale(v))
       .attr("data-index", (_v: number, i: number) => i)
       .on("mouseenter", (event: any, value: number) => {
         svg
@@ -84,7 +83,9 @@ export const BarGraph = ({ title, data, units, labels }: Props) => {
           .text(labels[event.target.dataset.index])
           .style("font-size", "10px");
       })
-      .on("mouseleave", () => svg.selectAll(".data-label").remove());
+      .on("mouseleave", () => svg.selectAll(".data-label").remove())
+      .transition()
+      .attr("height", (v: number) => yScale(v));
   }, [data, units, labels, dimensions]);
 
   return (

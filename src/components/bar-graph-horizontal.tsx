@@ -50,7 +50,7 @@ export const BarGraphHorizontal = ({ title, data, units, labels }: Props) => {
       .data(data)
       .join("rect")
       .attr("class", "bar")
-      .attr("width", (v: number) => xScale(v))
+
       .attr("height", (_: number, i: number) => yScale.bandwidth())
       .attr("y", (_: number, i: number) => yScale(i))
       .attr("data-index", (_: number, i: number) => i)
@@ -66,7 +66,9 @@ export const BarGraphHorizontal = ({ title, data, units, labels }: Props) => {
           .attr("dominant-baseline", "central")
           .text(`${v} ${units[event.target.dataset.index]}`);
       })
-      .on("mouseleave", () => svg.selectAll(".data-label").remove());
+      .on("mouseleave", () => svg.selectAll(".data-label").remove())
+      .transition()
+      .attr("width", (v: number) => xScale(v));
   }, [data, units, labels, dimensions]);
 
   return (
