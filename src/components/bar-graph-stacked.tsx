@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useResizeObserver } from "./graph-utilities";
 import * as d3 from "d3";
 
@@ -12,6 +12,7 @@ interface Props {
 export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const dimensions = useResizeObserver(svgRef);
+  const [legendPadding, setLegendPadding] = useState<number>(0);
 
   useEffect(() => {
     if (!dimensions) return;
@@ -28,34 +29,34 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
     const colors = data.map((_d, i) => `hsl(0,0%,${i * (100 / data.length)}%)`);
 
     // create legend
-    // clear legend
-    svg.selectAll(".legend-item").remove();
+    const legend = svg.select(".legend");
+    legend.selectAll("*").remove(); // clear legend
     const itemSpacing = 20;
     const itemSpacingInner = 3;
     const leftOffset = 5;
     for (let i = 0; i < labels.length; i++) {
       let offset: number = 0;
-      const legendItem = svg
+      const legendItem = legend
         .append("g")
         .attr("class", "legend-item")
         .attr("transform", () => {
           // get the previous legendItem's placement
           offset =
             i > 0
-              ? svg
+              ? legend
                   .select(".legend-item:nth-last-child(2)>text")
                   .node()
                   .getComputedTextLength() +
                 Number(
-                  svg.select(".legend-item:nth-last-child(2)>text").attr("x")
+                  legend.select(".legend-item:nth-last-child(2)>text").attr("x")
                 ) +
-                svg.select(".legend-item:nth-last-child(2)").node().transform
+                legend.select(".legend-item:nth-last-child(2)").node().transform
                   .baseVal[0].matrix.e
               : 0;
 
           return `translate(${offset + (i > 0 ? itemSpacing : leftOffset)},${
             i > 0
-              ? svg.select(".legend-item:nth-last-child(2)").node().transform
+              ? legend.select(".legend-item:nth-last-child(2)").node().transform
                   .baseVal[0].matrix.f
               : dimensions.height + 5
           })`;
@@ -89,6 +90,7 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
           })`
         );
     }
+    setLegendPadding(legend.node().getBBox().height);
 
     svg
       .selectAll(".bar")
@@ -138,20 +140,21 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
       .select(".border")
       .attr("width", dimensions.width)
       .attr("height", dimensions.height);
-
-    return () => {
-      svg.selectAll(".legend-item").remove();
-    };
   });
 
   return (
     <div className="max-w-full h-full space-y-[10px] flex flex-col">
       <p className="text-[12px]">{title}</p>
 
-      <svg ref={svgRef} className="w-full h-full overflow-visible pb-[15px]">
+      <svg
+        ref={svgRef}
+        className="w-full h-full overflow-visible"
+        style={{ paddingBottom: legendPadding }}
+      >
         <rect className="border fill-none stroke-gray-300" />
         <g className="x-axis" />
         <g className="y-axis" />
+        <g className="legend" />
       </svg>
     </div>
   );

@@ -138,12 +138,6 @@ export const Graphs = ({
         className="grid gap-y-[30px] gap-x-[60px]
       md:grid-cols-2"
       >
-        <BarGraph
-          title="Macronutrients"
-          data={macrosData}
-          units={macrosUnits}
-          labels={macrosLabels}
-        />
         <BarGraphHorizontal
           title="Vitamins"
           data={vitaminsData}
