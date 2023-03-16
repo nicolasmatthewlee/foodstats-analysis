@@ -90,7 +90,7 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
           })`
         );
     }
-    setLegendPadding(legend.node().getBBox().height);
+    setLegendPadding(legend.node().getBBox().height + leftOffset); // leftOffset value used for vertical spacing
 
     svg
       .selectAll(".bar")
@@ -143,7 +143,7 @@ export const BarGraphStacked = ({ title, data, units, labels }: Props) => {
   });
 
   return (
-    <div className="max-w-full h-full space-y-[10px] flex flex-col">
+    <div className="max-w-full h-full flex flex-col space-y-[10px]">
       <p className="text-[12px]">{title}</p>
 
       <svg

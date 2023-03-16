@@ -123,7 +123,7 @@ export const Graphs = ({
         </div>
         <p className="text-sm text-gray-500">{dataType}</p>
       </div>
-      <div className="h-[100px]">
+      <div className="h-[80px]">
         <BarGraphStacked
           title="Macronutrients"
           data={macrosData}
@@ -131,17 +131,13 @@ export const Graphs = ({
           labels={macrosLabels}
         />
       </div>
-      <div
-        className="grid gap-y-[30px] gap-x-[60px]
-      md:grid-cols-2"
-      >
-        <BarGraphHorizontal
-          title="Vitamins & Minerals"
-          data={vitaminsMineralsData}
-          units={vitaminsMineralsUnits}
-          labels={vitaminsMineralsLabels}
-        />
-      </div>
+
+      <BarGraphHorizontal
+        title="Vitamins & Minerals"
+        data={vitaminsMineralsData}
+        units={vitaminsMineralsUnits}
+        labels={vitaminsMineralsLabels}
+      />
     </div>
   );
 };

@@ -48,18 +48,47 @@ export const BarGraphHorizontal = ({ title, data, units, labels }: Props) => {
       .attr("y", (_: number, i: number) => yScale(i))
       .attr("data-index", (_: number, i: number) => i)
       .on("mouseenter", (event: any, v: number) => {
-        svg
+        const textPadding = 3;
+        const textFill = svg
+          .selectAll(".data-label-fill")
+          .data([v])
+          .join("rect")
+          .attr("class", "data-label-fill")
+          .attr("y", +select(event.target).attr("y") - 12)
+          .attr("height", 12)
+          .attr("fill", "white")
+          .attr("stroke", "black");
+        const text = svg
           .selectAll(".data-label")
           .data([v])
           .join("text")
           .attr("class", "data-label")
           .attr("font-size", "10px")
-          .attr("y", +select(event.target).attr("y") + yScale.bandwidth() / 2)
-          .attr("x", xScale(v) + 2)
-          .attr("dominant-baseline", "central")
+          .attr("y", +select(event.target).attr("y") - 2)
+          .attr("x", xScale(v) - textPadding)
+          .attr("text-anchor", "end")
           .text(`${v} ${units[event.target.dataset.index]}`);
+
+        textFill.attr(
+          "width",
+          text.node().getComputedTextLength() + textPadding * 2
+        ); // set rect width based on text
+
+        if (text.node().getComputedTextLength() + 2 * textPadding > xScale(v)) {
+          text.attr("text-anchor", "start");
+          text.attr("x", 1 + textPadding);
+          textFill.attr("x", 1);
+        } else {
+          textFill.attr(
+            "x",
+            xScale(v) - text.node().getComputedTextLength() - textPadding * 2
+          );
+        }
       })
-      .on("mouseleave", () => svg.selectAll(".data-label").remove())
+      .on("mouseleave", () => {
+        svg.selectAll(".data-label").remove();
+        svg.selectAll(".data-label-fill").remove();
+      })
       .transition()
       .attr("width", (v: number) => xScale(v));
   }, [data, units, labels, dimensions]);
