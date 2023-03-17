@@ -1,2 +1,2 @@
-notebooks/** linguist-vendored
-nhanes-2005-2006/** linguist vendored
+scripts/notebooks/* linguist-vendored
+scripts/nhanes-2005-2006/* linguist vendored
