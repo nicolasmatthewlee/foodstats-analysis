@@ -33,7 +33,7 @@ export const SearchBar = () => {
   };
 
   return (
-    <div className="p-[30px] flex flex-col space-y-[30px]">
+    <div className="p-[30px] pt-[15px] flex flex-col space-y-[30px]">
       <div className="z-20">
         <form className="flex border-2">
           <div className="flex items-center">
