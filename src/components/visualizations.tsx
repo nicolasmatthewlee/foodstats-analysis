@@ -15,11 +15,11 @@ interface Props {
 export const Visualizations = ({
   data: { dataType, fdcId, description, foodNutrients, publishedDate },
 }: Props) => {
-  const findNutrientByName = (name: string, data: typeof foodNutrients) => {
+  const findNutrientByName = (name: string, data: NutrientInterface[]) => {
     for (let i = 0; i < data.length; i++) {
-      if (data[i].nutrientName === name) return data[i];
+      if (data[i].nutrient.name === name) return data[i];
     }
-    return { value: null };
+    return false;
   };
 
   const getDataUnitsLabels = (
@@ -33,16 +33,16 @@ export const Visualizations = ({
 
     for (let n of nutrients) {
       const nutrient = findNutrientByName(n, dataSource);
-      if (nutrient.value !== null) {
+      if (nutrient) {
         const label =
-          nutrient.nutrientName === "Carbohydrate, by difference"
+          nutrient.nutrient.name === "Carbohydrate, by difference"
             ? "Carbohydrate"
-            : nutrient.nutrientName === "Total lipid (fat)"
+            : nutrient.nutrient.name === "Total lipid (fat)"
             ? "Fat"
-            : nutrient.nutrientName;
+            : nutrient.nutrient.name;
         labels.push(label);
-        data.push(nutrient.value);
-        if (absoluteUnits) units.push(nutrient.unitName);
+        data.push(nutrient.amount);
+        if (absoluteUnits) units.push(nutrient.nutrient.unitName);
         else units.push("%");
       }
     }
@@ -63,11 +63,11 @@ export const Visualizations = ({
   ) => {
     return nutrients.map((e) => {
       const copy = structuredClone(e);
-      copy["value"] =
+      copy["amount"] =
         Math.round(
           percentile(
-            e.nutrientId in NUTRIENT_DATA ? NUTRIENT_DATA[e.nutrientId] : [],
-            e.value
+            e.nutrient.id in NUTRIENT_DATA ? NUTRIENT_DATA[e.nutrient.id] : [],
+            e.amount
           ) * 100
         ) / 100;
 

@@ -1,8 +1,9 @@
 export interface NutrientInterface {
-  nutrientId: number;
-  nutrientName: string;
-  nutrientNumber: string;
-  rank: number;
-  unitName: string;
-  value: number;
+  type: string;
+  nutrient: {
+    id: number;
+    name: string;
+    unitName: string;
+  };
+  amount: number;
 }
