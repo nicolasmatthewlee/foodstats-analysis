@@ -12,7 +12,7 @@ interface Props {
   data: FoodInterface;
 }
 
-export const Graphs = ({
+export const Visualizations = ({
   data: { dataType, fdcId, description, foodNutrients, publishedDate },
 }: Props) => {
   const findNutrientByName = (name: string, data: typeof foodNutrients) => {

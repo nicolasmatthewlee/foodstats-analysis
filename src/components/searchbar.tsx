@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Graphs } from "./visualizations";
 import { FoodInterface } from "../interfaces/food-interface";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,12 +6,16 @@ import {
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 
-export const SearchBar = () => {
+interface Props {
+  setData: Function;
+}
+
+export const SearchBar = ({ setData }: Props) => {
   const [searchValue, setSearchValue] = useState<String>("");
   const [searchResults, setSearchResults] = useState<FoodInterface[]>([]);
-  const [isLoading, setIsLoading] = useState<Boolean>(false);
-  const [selection, setSelection] = useState<FoodInterface | null>(null);
   const [showSearchResults, setShowSearchResults] = useState<Boolean>(false);
+
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
 
   const searchDatabase = async () => {
     setSearchResults([]);
@@ -26,8 +29,8 @@ export const SearchBar = () => {
       if (json.foods) setSearchResults(json.foods);
 
       setShowSearchResults(true);
-      setIsLoading(false);
     } catch {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -62,7 +65,7 @@ export const SearchBar = () => {
             ></FontAwesomeIcon>
           </button>
         </form>
-        {isLoading ? <div>loading...</div> : null}
+        {isLoading ? <div className="px-[30px]">loading...</div> : null}
         {showSearchResults && searchResults.length > 0 ? (
           <div className="flex flex-col border-2 border-t-0">
             {searchResults.map((e, i) => (
@@ -74,7 +77,7 @@ export const SearchBar = () => {
                 }
                 onClick={() => {
                   setShowSearchResults(false);
-                  setSelection(e);
+                  setData(e);
                 }}
               >
                 {e.description}
@@ -84,13 +87,12 @@ export const SearchBar = () => {
         ) : null}
       </div>
       {/* searchResultsOverlay */}
-      <div
-        className="w-full h-full fixed top-[-30px] left-0"
-        onClick={() => setShowSearchResults(false)}
-      ></div>
-      <div className="z-10 ">
-        {selection ? <Graphs data={selection} /> : null}
-      </div>
+      {showSearchResults && (
+        <div
+          className="w-full h-full fixed top-[-30px] left-0"
+          onClick={() => setShowSearchResults(false)}
+        ></div>
+      )}
     </div>
   );
 };
