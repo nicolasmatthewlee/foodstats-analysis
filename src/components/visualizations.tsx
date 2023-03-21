@@ -2,6 +2,11 @@ import { FoodInterface } from "../interfaces/food-interface";
 import { BarGraph } from "./bar-graph";
 import { BarGraphStacked } from "./bar-graph-stacked";
 import { BarGraphHorizontal } from "./bar-graph-horizontal";
+import NUTRIENT_DATA_JSON from "../nutrient_amounts.json";
+import { percentile } from "./graph-utilities";
+import { useEffect, useState } from "react";
+import { NutrientInterface } from "../interfaces/nutrient-interface";
+const NUTRIENT_DATA = Object(NUTRIENT_DATA_JSON);
 
 interface Props {
   data: FoodInterface;
@@ -10,22 +15,24 @@ interface Props {
 export const Graphs = ({
   data: { dataType, fdcId, description, foodNutrients, publishedDate },
 }: Props) => {
-  const findNutrientByName = (name: string) => {
-    for (let i = 0; i < foodNutrients.length; i++) {
-      if (foodNutrients[i].nutrientName === name) return foodNutrients[i];
+  const findNutrientByName = (name: string, data: typeof foodNutrients) => {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].nutrientName === name) return data[i];
     }
     return { value: null };
   };
 
   const getDataUnitsLabels = (
-    nutrients: string[]
+    nutrients: string[],
+    dataSource: typeof foodNutrients,
+    absoluteUnits: Boolean = true
   ): [number[], string[], string[]] => {
     let data: number[] = [];
     let units: string[] = [];
     let labels: string[] = [];
 
     for (let n of nutrients) {
-      const nutrient = findNutrientByName(n);
+      const nutrient = findNutrientByName(n, dataSource);
       if (nutrient.value !== null) {
         const label =
           nutrient.nutrientName === "Carbohydrate, by difference"
@@ -35,12 +42,43 @@ export const Graphs = ({
             : nutrient.nutrientName;
         labels.push(label);
         data.push(nutrient.value);
-        units.push(nutrient.unitName);
+        if (absoluteUnits) units.push(nutrient.unitName);
+        else units.push("%");
       }
     }
 
     return [data, units, labels];
   };
+
+  const [foodNutrientPercentiles, setFoodNutrientPercentiles] = useState<
+    NutrientInterface[]
+  >([]);
+
+  const [isShowingAbsoluteData, setIsShowingAbsoluteData] =
+    useState<Boolean>(true);
+
+  const computeNutrientPercentiles = (
+    nutrients: typeof foodNutrients,
+    NUTRIENT_DATA: any
+  ) => {
+    return nutrients.map((e) => {
+      const copy = structuredClone(e);
+      copy["value"] =
+        Math.round(
+          percentile(
+            e.nutrientId in NUTRIENT_DATA ? NUTRIENT_DATA[e.nutrientId] : [],
+            e.value
+          ) * 100
+        ) / 100;
+
+      return copy;
+    });
+  };
+  useEffect(() => {
+    setFoodNutrientPercentiles(
+      computeNutrientPercentiles(foodNutrients, NUTRIENT_DATA)
+    );
+  }, [foodNutrients]);
 
   const macros = [
     "Total lipid (fat)",
@@ -109,10 +147,17 @@ export const Graphs = ({
     "Lutein + zeaxanthin",
   ];
 
-  let [macrosData, macrosUnits, macrosLabels] = getDataUnitsLabels(macros);
+  let [macrosData, macrosUnits, macrosLabels] = getDataUnitsLabels(
+    macros,
+    foodNutrients
+  );
 
   let [vitaminsMineralsData, vitaminsMineralsUnits, vitaminsMineralsLabels] =
-    getDataUnitsLabels(minerals.concat(...vitamins));
+    getDataUnitsLabels(
+      minerals.concat(...vitamins),
+      isShowingAbsoluteData ? foodNutrients : foodNutrientPercentiles,
+      isShowingAbsoluteData ? true : false
+    );
 
   return (
     <div className="space-y-[30px] pb-[30px]">
@@ -138,6 +183,14 @@ export const Graphs = ({
         units={vitaminsMineralsUnits}
         labels={vitaminsMineralsLabels}
       />
+      <button
+        className="hover:bg-gray-100 text-sm px-[7px] py-[2px] rounded-sm"
+        onClick={() => {
+          setIsShowingAbsoluteData(!isShowingAbsoluteData);
+        }}
+      >
+        {isShowingAbsoluteData ? "percentiles" : "absolute"}
+      </button>
     </div>
   );
 };

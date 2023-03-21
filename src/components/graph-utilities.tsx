@@ -31,4 +31,16 @@ const truncateSVGText = (element: SVGTextElement, maxWidth: number) => {
   }
 };
 
-export { useResizeObserver, truncateSVGText };
+const percentile = (arr: number[], val: number) => {
+  let count = 0;
+  arr.forEach((v) => {
+    if (v < val) {
+      count++;
+    } else if (v === val) {
+      count += 0.5;
+    }
+  });
+  return (100 * count) / arr.length;
+};
+
+export { useResizeObserver, truncateSVGText, percentile };
