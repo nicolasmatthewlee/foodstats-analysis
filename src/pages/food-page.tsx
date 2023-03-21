@@ -30,7 +30,7 @@ export const FoodPage = () => {
       }
     };
     getFood();
-  }, []);
+  }, [id]);
 
   return (
     <div className="px-[30px]">

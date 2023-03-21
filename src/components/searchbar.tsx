@@ -5,12 +5,9 @@ import {
   faLongArrowAltRight,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
-interface Props {
-  setData: Function;
-}
-
-export const SearchBar = ({ setData }: Props) => {
+export const SearchBar = () => {
   const [searchValue, setSearchValue] = useState<String>("");
   const [searchResults, setSearchResults] = useState<FoodInterface[]>([]);
   const [showSearchResults, setShowSearchResults] = useState<Boolean>(false);
@@ -65,23 +62,23 @@ export const SearchBar = ({ setData }: Props) => {
             ></FontAwesomeIcon>
           </button>
         </form>
-        {isLoading ? <div className="px-[30px]">loading...</div> : null}
+        {isLoading ? <div className="pt-[30px]">loading...</div> : null}
         {showSearchResults && searchResults.length > 0 ? (
           <div className="flex flex-col border-2 border-t-0">
             {searchResults.map((e, i) => (
-              <button
-                key={e.fdcId}
-                className={
-                  "text-left truncate px-[10px] py-[2px] focus:z-10 focus:bg-amber-200 focus:outline-none hover:bg-amber-200 " +
-                  (i % 2 === 0 ? " bg-gray-100 " : "bg-white")
-                }
-                onClick={() => {
-                  setShowSearchResults(false);
-                  setData(e);
-                }}
-              >
-                {e.description}
-              </button>
+              <Link to={`/foods/${e.fdcId}`} key={e.fdcId} className="flex">
+                <button
+                  className={
+                    "flex-1 text-left truncate px-[10px] py-[2px] focus:z-10 focus:bg-amber-200 focus:outline-none hover:bg-amber-200 " +
+                    (i % 2 === 0 ? " bg-gray-100 " : "bg-white")
+                  }
+                  onClick={() => {
+                    setShowSearchResults(false);
+                  }}
+                >
+                  {e.description}
+                </button>
+              </Link>
             ))}
           </div>
         ) : null}
