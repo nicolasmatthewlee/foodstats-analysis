@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import { FoodPage } from "./pages/food-page";
 
 function App() {
-  const api = "http://24.199.116.13:443";
+  const api = "https://foodstats.net";
 
   return (
     <div>
