@@ -4,13 +4,15 @@ import { Routes, Route } from "react-router-dom";
 import { FoodPage } from "./pages/food-page";
 
 function App() {
+  const api = "http://24.199.116.13:443";
+
   return (
     <div>
       <h1 className="text-[40px] text-left pt-[30px] px-[30px]">FoodStat</h1>
-      <SearchBar />
+      <SearchBar api={api} />
       <Routes>
         <Route path="/" element={null} />
-        <Route path="/foods/:id" element={<FoodPage />} />
+        <Route path="/foods/:id" element={<FoodPage api={api} />} />
         <Route
           path="*"
           element={<div className="p-[30px] pt-0">page not found</div>}

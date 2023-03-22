@@ -3,7 +3,11 @@ import { FoodInterface } from "../interfaces/food-interface";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-export const FoodPage = () => {
+interface Props {
+  api: string;
+}
+
+export const FoodPage = ({ api }: Props) => {
   const { id } = useParams();
   const [data, setData] = useState<FoodInterface | null>(null);
   const [pageState, setPageState] = useState<
@@ -15,9 +19,7 @@ export const FoodPage = () => {
       setData(null);
       setPageState("loading");
       try {
-        const response = await fetch(
-          `https://api.nal.usda.gov/fdc/v1/food/${id}?api_key=${process.env.REACT_APP_KEY}`
-        );
+        const response = await fetch(`${api}/api/foods/${id}`);
 
         if (response.status === 404) return setPageState("not found");
 

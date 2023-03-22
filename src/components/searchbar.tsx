@@ -7,7 +7,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
-export const SearchBar = () => {
+interface Props {
+  api: string;
+}
+
+export const SearchBar = ({ api }: Props) => {
   const [searchValue, setSearchValue] = useState<String>("");
   const [searchResults, setSearchResults] = useState<FoodInterface[]>([]);
   const [showSearchResults, setShowSearchResults] = useState<Boolean>(false);
@@ -19,10 +23,9 @@ export const SearchBar = () => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${process.env.REACT_APP_KEY}&query=${searchValue}`
+        `${api}/api/foods/search?query=${searchValue}`
       );
       const json = await response.json();
-
       if (json.foods) setSearchResults(json.foods);
 
       setShowSearchResults(true);
